@@ -38,6 +38,9 @@ for i in range(3):
         test_labels.append (i+1)
 test_images=np.array(test_images,dtype='float32')
 test_labels=np.array(test_labels,dtype='float64')
+train_images=train_images/255.0
+test_images=test_images/255.0
+
 
 import matplotlib.pyplot as plt
 
@@ -56,14 +59,16 @@ gtrain_images=gtrain_images/255.0
 gtest_images=gtest_images/255.0
 
 model = tf.keras.Sequential([
-    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Flatten(input_shape=(28, 28,3)),
     tf.keras.layers.Dense(128, activation=tf.nn.relu),
     tf.keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
 model.compile(optimizer= 'adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
-model.fit(gtrain_images,train_labels,epochs=15)
+model.fit(train_images,train_labels,epochs=10)
 
-test_loss,test_acc=model.evaluate(gtest_images,test_labels)
+test_loss,test_acc=model.evaluate(test_images,test_labels)
 print("test acc:",test_acc)
+
+model.save("rgbcolourclassifiernormalized.h5")
